@@ -19,7 +19,7 @@ class IpfsStorageScrapper:
         req = requests.get(self.url, self.headers)
         return req.content
     
-    def proccess(self) -> list:
+    def process(self, sortByName = True) -> list:
         soup = BeautifulSoup(self.getHTML(), 'html.parser')
         table = soup.find_all('table')
 
@@ -37,11 +37,14 @@ class IpfsStorageScrapper:
             }
             ipfsItems.append(ipfsItem)
 
+        if sortByName:
+            ipfsItems = sorted(ipfsItems, key=lambda d: d['name'])
+        
         return ipfsItems
     
 def main():
-    iss = IpfsStorageScrapper(url="https://<myuser>.mypinata.cloud/ipfs/<hash>")
-    items = iss.proccess()
+    iss = IpfsStorageScrapper(url="https://mahan.mypinata.cloud/ipfs/QmUEQHYfqNdnF1RcAcELXUCXjtJvMCY6DYQNk8WQkiZaN8/")
+    items = iss.process()
     print(items)
 
 if __name__ == "__main__":
