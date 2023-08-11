@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import csv
 
 class IpfsStorageScrapper:
     url = ""
@@ -42,10 +43,16 @@ class IpfsStorageScrapper:
         
         return ipfsItems
     
+    def exportToCSV(self):
+        items = self.process()
+        with open('out.csv', 'w') as outfile:
+            wr = csv.DictWriter(outfile, items[0].keys())
+            wr.writeheader()
+            wr.writerows(items)
+
 def main():
     iss = IpfsStorageScrapper(url="https://mahan.mypinata.cloud/ipfs/QmUEQHYfqNdnF1RcAcELXUCXjtJvMCY6DYQNk8WQkiZaN8/")
-    items = iss.process()
-    print(items)
+    iss.exportToCSV()
 
 if __name__ == "__main__":
     main()
